@@ -1,0 +1,58 @@
+[gd_scene load_steps=4 format=3 uid="uid://dx4m8k2eetvl4"]
+
+[ext_resource type="Texture2D" uid="uid://cle4mv627dc4b" path="res://Snakser/icon.svg" id="1_4rojq"]
+
+[sub_resource type="GDScript" id="GDScript_y0lfc"]
+script/source = "extends CharacterBody2D
+
+var Direction
+const SPEED = 300.0
+
+var GRID :Array
+
+func _ready():
+	for i in range(11):
+		GRID.append([])
+		for j in range(11):
+			GRID[i].append(Vector2(i * 10, j * 10))
+	print(GRID)
+
+#Get place for snake to go along a certain sort of grid then set that goal to the previous snake body segment
+func _physics_process(_delta):
+	if Input.is_action_pressed(\"ui_left\"):
+		Direction = \"left\"
+		velocity.x = -1 * SPEED
+		velocity.y = 0
+		#$\".\".position = lerp(Vector2)
+	if Input.is_action_pressed(\"ui_right\"):
+		Direction = \"right\"
+		velocity.x = 1 * SPEED
+		velocity.y = 0
+		#$\".\".position.y = move_toward($\".\".position.y,10,50)
+	if Input.is_action_pressed(\"ui_down\"):
+		Direction = \"down\"
+		velocity.y = 1 * SPEED
+		velocity.x = 0
+		#$\".\".position.x = move_toward($\".\".position.x,10,50)
+	if Input.is_action_pressed(\"ui_up\"):
+		Direction = \"up\"
+		velocity.y = -1 * SPEED
+		velocity.x = 0
+	
+	move_and_slide()
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ilb8m"]
+size = Vector2(95, 89)
+
+[node name="Player" type="CharacterBody2D"]
+script = SubResource("GDScript_y0lfc")
+
+[node name="Icon" type="Sprite2D" parent="."]
+position = Vector2(37, 32)
+scale = Vector2(0.765625, 0.765625)
+texture = ExtResource("1_4rojq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(37.5, 34.5)
+shape = SubResource("RectangleShape2D_ilb8m")
