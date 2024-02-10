@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://ccmu71e6vyuad"]
+
+[ext_resource type="Texture2D" uid="uid://cle4mv627dc4b" path="res://SnakeSser/icon.svg" id="1_imhfg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jkqhn"]
+size = Vector2(41, 41)
+
+[node name="SnakeSegment" type="Area2D"]
+
+[node name="Icon" type="Sprite2D" parent="."]
+position = Vector2(10, 9)
+scale = Vector2(0.34375, 0.328125)
+texture = ExtResource("1_imhfg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(10.5, 10.5)
+shape = SubResource("RectangleShape2D_jkqhn")
