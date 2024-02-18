@@ -59,7 +59,10 @@ func _physics_process(delta):
 		# if we have reached the target
 		next_pos = target_pos + direction * 50
 		target_pos = next_pos
-		curr_pos = _get_position_from_grid(target_pos.x/10, target_pos.y/10) - direction * 50
+		curr_pos = _get_position_from_grid(target_pos.x/10, target_pos.y/10) - direction * 10
+		print(position)
+		print(target_pos)
+		print(curr_pos)
 
 
 func _get_position_from_grid(col : int, row : int) -> Vector2:
