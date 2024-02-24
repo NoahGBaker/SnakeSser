@@ -1,14 +1,15 @@
 extends Area2D
 class_name snake_head
 
-const SPEED = 400.0
+const SPEED = 300.0
 
 var direction_pos
 var direction = Vector2.RIGHT
+var next_direction = Vector2.RIGHT
 var curr_pos
 var target_pos
 var next_pos
-
+var move_time = .5
 
 const Row = 50
 const Collumn = 50
@@ -26,7 +27,6 @@ func _ready():
 		GRID.append([])
 		for j in range(Row):
 			GRID[i].append(Vector2(i * 10 + 100, j * 10 + 100))
-	position = GRID[5][5]
 	curr_pos = GRID[5][5]
 	target_pos = GRID[10][5]
 	#print(GRID)
@@ -34,18 +34,24 @@ func _ready():
 
 func _unhandled_input(event):
 	if position != target_pos:
-		if event.is_action_pressed("ui_left"):
+		if event.is_action_pressed("ui_left") and direction != Vector2.RIGHT and move_time <= 0:
+			move_time = .1
 			direction = Vector2.LEFT
-		if event.is_action_pressed("ui_right"):
+		if event.is_action_pressed("ui_right") and direction != Vector2.LEFT and move_time <= 0:
+			move_time = .1
 			direction = Vector2.RIGHT
-		if event.is_action_pressed("ui_up"):
+		if event.is_action_pressed("ui_up") and direction != Vector2.DOWN and move_time <= 0:
+			move_time = .1
 			direction = Vector2.UP
-		if event.is_action_pressed("ui_down"):
+		if event.is_action_pressed("ui_down") and direction != Vector2.UP and move_time <= 0:
+			move_time = .1
 			direction = Vector2.DOWN
-		if Input.is_action_just_pressed("ui_left") or Input.is_action_just_pressed("ui_right"):
-			position = curr_pos
-		if Input.is_action_just_pressed("ui_down") or Input.is_action_just_pressed("ui_up"):
-			position = curr_pos
+		#If a directional input happens set the position to nearest grid spot
+		if Input.is_action_just_pressed("ui_left") or Input.is_action_just_pressed("ui_right") or Input.is_action_just_pressed("ui_down") or Input.is_action_just_pressed("ui_up"):
+			if $move_timer.is_stopped():
+				position = curr_pos
+			else:
+				next_direction = direction
 		direction_pos = curr_pos
 #Use direction_pos to get the position of where we turn and get the turn direction. 
 #Then use that to have a snake segment turn there
@@ -54,15 +60,17 @@ func _unhandled_input(event):
 #Get place for snake to go along a certain sort of grid then set that goal to the previous snake body segment
 func _physics_process(delta):
 	# move towards target position
+	move_time -= delta
+	print(move_time)
 	position = position.move_toward(target_pos, SPEED * delta)
 	if position == target_pos:
+		if next_direction != direction:
+			direction = next_direction
 		# if we have reached the target
-		next_pos = target_pos + direction * 50
+		$move_timer.start(2)
+		next_pos = target_pos + direction * 40
 		target_pos = next_pos
 		curr_pos = _get_position_from_grid(target_pos.x/10, target_pos.y/10) - direction * 10
-		print(position)
-		print(target_pos)
-		print(curr_pos)
 
 
 func _get_position_from_grid(col : int, row : int) -> Vector2:
