@@ -1,20 +1,21 @@
 extends Area2D
-class_name snake_head
+class_name SnakeHead
 
 
 #Snake Head:
 #Movement
 #Collision (Walls/Self/Apple)
 #Adding Segments: How? Adding the segment as a child of the Tail
-#First Snake Segment: Why?
-#                     In order to give it the first Direction Position
-#Last Snake Segment (Tail): Why?
-#                     To add segments after that segment
+#Be able to have an ARRAY of all of the snake segments:
+#      Loop through each one and tell it where to go.
+#      According to the next segment in the loop.
+#      Do this in this if statement: if position == target_pos:
+#      Loop through all segments head to tail and set their target position to the previous things current position.
 #Score
 
 signal MoveSegment 
 
-const SPEED = 300.0
+const SPEED = 290.0
 
 var direction_pos = Vector2(190, 150)
 var direction = Vector2.RIGHT
@@ -27,28 +28,22 @@ var move_time = .05
 
 
 func _unhandled_input(event):
-	if position != target_pos:
-		if event.is_action_pressed("ui_left") and direction != Vector2.RIGHT and move_time <= 0:
-			move_time = .1
-			direction = Vector2.LEFT
-		if event.is_action_pressed("ui_right") and direction != Vector2.LEFT and move_time <= 0:
-			move_time = .1
-			direction = Vector2.RIGHT
-		if event.is_action_pressed("ui_up") and direction != Vector2.DOWN and move_time <= 0:
-			move_time = .1
-			direction = Vector2.UP
-		if event.is_action_pressed("ui_down") and direction != Vector2.UP and move_time <= 0:
-			move_time = .1
-			direction = Vector2.DOWN
-		#If a directional input happens set the position to nearest grid spot
-		if Input.is_action_just_pressed("ui_left") or Input.is_action_just_pressed("ui_right") or Input.is_action_just_pressed("ui_down") or Input.is_action_just_pressed("ui_up"):
-			#No clue why this needs to be here but just dont delete this.
-			if $move_timer.is_stopped():
-				position = curr_pos
-			else:
-				next_direction = direction
-		direction_pos = curr_pos
-		emit_signal("MoveSegment")
+	if event.is_action_pressed("ui_left") and direction != Vector2.RIGHT:
+		next_direction = Vector2.LEFT
+	if event.is_action_pressed("ui_right") and direction != Vector2.LEFT:
+		next_direction = Vector2.RIGHT
+	if event.is_action_pressed("ui_up") and direction != Vector2.DOWN:
+		next_direction = Vector2.UP
+	if event.is_action_pressed("ui_down") and direction != Vector2.UP:
+		next_direction = Vector2.DOWN
+	#If a directional input happens set the position to nearest grid spot
+	if Input.is_action_just_pressed("ui_left") or Input.is_action_just_pressed("ui_right") or Input.is_action_just_pressed("ui_down") or Input.is_action_just_pressed("ui_up"):
+		#No clue why this needs to be here but just dont delete this.
+		if $move_timer.is_stopped():
+			position = curr_pos
+	
+	direction_pos = curr_pos
+	emit_signal("MoveSegment")
 #Use direction_pos to get the position of where we turn and get the turn direction. 
 #Then use that to have a snake segment turn there
 
@@ -59,14 +54,12 @@ func _physics_process(delta):
 	move_time -= delta
 	position = position.move_toward(target_pos, SPEED * delta)
 	if position == target_pos:
-		if next_direction != direction:
-			direction = next_direction
-		# if we have reached the target
+		#If we have reached the target
 		#Set next position to target position and the direction by the grid square size
-		next_pos = target_pos + direction * 40
+		next_pos = target_pos + next_direction * 40
 		target_pos = next_pos
-		curr_pos = _get_position_from_grid(target_pos.x/10, target_pos.y/10) - direction * 10
-
+		curr_pos = _get_position_from_grid(target_pos.x/10, target_pos.y/10) - next_direction * 10
+		direction = next_direction
 
 func _get_position_from_grid(col : int, row : int) -> Vector2:
 	return Vector2(col * 10, row * 10)
