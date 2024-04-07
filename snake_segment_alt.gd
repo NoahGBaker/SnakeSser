@@ -19,6 +19,7 @@ var direction_pos
 func _physics_process(delta):
 	position = position.move_toward(target_pos, SPEED * delta)
 	if position == target_pos:
+		segment_move_segment.emit(target_pos,direction,direction_pos)
 		#If we have reached the target
 		#Set next position to target position and the direction by the grid square size
 		next_pos = target_pos + next_direction * 40
@@ -26,15 +27,5 @@ func _physics_process(delta):
 		curr_pos = _get_position_from_grid(target_pos.x/10, target_pos.y/10) - next_direction * 10
 		direction = next_direction
 
-func MoveSegment():
-	emit_signal("segment_moved")
-
 func _get_position_from_grid(col : int, row : int) -> Vector2:
 	return Vector2(col * 10, row * 10)
-
-
-func segment_move(target_pos_2, direction_2, direction_pos_2):
-	segment_move_segment.emit(target_pos,direction,direction_pos)
-	target_pos = target_pos_2
-	direction = direction_2
-	direction_pos = direction_pos_2
