@@ -1,6 +1,7 @@
 extends Area2D
 class_name SnakeHead
 
+signal segment_moved(target_pos_2, direction_2, direction_pos_2)
 
 #Snake Head:
 #Movement
@@ -11,12 +12,11 @@ class_name SnakeHead
 #      According to the next segment in the loop.
 #      Do this in this if statement: if position == target_pos:
 #      Loop through all segments head to tail and set their target position to the previous things current position.
-#Score
-
-signal MoveSegment 
+#Score 
 
 const SPEED = 290.0
 
+@onready var segment = get_node("$../SnakeSegment")
 var direction_pos = Vector2(190, 150)
 var direction = Vector2.RIGHT
 var next_direction = Vector2.RIGHT
@@ -24,8 +24,6 @@ var curr_pos = Vector2(150, 150)
 var target_pos = Vector2(200, 150)
 var next_pos
 var move_time = .05
-
-
 
 func _unhandled_input(event):
 	if event.is_action_pressed("ui_left") and direction != Vector2.RIGHT:
@@ -43,7 +41,6 @@ func _unhandled_input(event):
 			position = curr_pos
 	
 	direction_pos = curr_pos
-	emit_signal("MoveSegment")
 #Use direction_pos to get the position of where we turn and get the turn direction. 
 #Then use that to have a snake segment turn there
 
@@ -56,6 +53,7 @@ func _physics_process(delta):
 	if position == target_pos:
 		#If we have reached the target
 		#Set next position to target position and the direction by the grid square size
+		segment_moved.emit(target_pos, direction, direction_pos)
 		next_pos = target_pos + next_direction * 40
 		target_pos = next_pos
 		curr_pos = _get_position_from_grid(target_pos.x/10, target_pos.y/10) - next_direction * 10

@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://dm88rgdsynscu"]
+[gd_scene load_steps=6 format=3 uid="uid://dm88rgdsynscu"]
 
 [ext_resource type="PackedScene" uid="uid://dx4m8k2eetvl4" path="res://player.tscn" id="2_pltb8"]
+[ext_resource type="PackedScene" uid="uid://ccmu71e6vyuad" path="res://snake_segment.tscn" id="3_vacby"]
 [ext_resource type="Texture2D" uid="uid://uxbmq3aigrs2" path="res://grass.png" id="5_15pvd"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4qup3"]
@@ -46,3 +47,8 @@ layer_0/tile_data = PackedInt32Array(0, 0, 0, 65536, 0, 1, 1, 65536, 0, 65537, 6
 
 [node name="Player" parent="." instance=ExtResource("2_pltb8")]
 position = Vector2(130, 109)
+
+[node name="SnakeSegment" parent="." instance=ExtResource("3_vacby")]
+position = Vector2(130, 109)
+
+[connection signal="segment_moved" from="Player" to="SnakeSegment" method="segment_move"]

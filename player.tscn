@@ -1,15 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://dx4m8k2eetvl4"]
+[gd_scene load_steps=3 format=3 uid="uid://dx4m8k2eetvl4"]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_ug2c0"]
-[ext_resource type="PackedScene" uid="uid://ccmu71e6vyuad" path="res://snake_segment.tscn" id="2_12yiw"]
-[ext_resource type="Script" path="res://snake_segment.gd" id="3_qm0fk"]
+[ext_resource type="Texture2D" uid="uid://cle4mv627dc4b" path="res://icon.svg" id="4_3cxxt"]
 
 [node name="Player" type="Area2D"]
 script = ExtResource("1_ug2c0")
 
-[node name="Snake Segment" parent="." instance=ExtResource("2_12yiw")]
-script = ExtResource("3_qm0fk")
-
 [node name="move_timer" type="Timer" parent="."]
 wait_time = 0.5
 autostart = true
+
+[node name="Icon" type="Sprite2D" parent="."]
+position = Vector2(10, 9)
+scale = Vector2(0.34375, 0.328125)
+texture = ExtResource("4_3cxxt")
