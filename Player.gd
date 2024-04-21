@@ -1,8 +1,6 @@
 extends Area2D
 class_name SnakeHead
 
-signal segment_moved(target_pos_2, direction_2, direction_pos_2)
-
 #Snake Head:
 #Movement
 #Collision (Walls/Self/Apple)
@@ -24,6 +22,8 @@ var curr_pos = Vector2(150, 150)
 var target_pos = Vector2(200, 150)
 var next_pos
 var move_time = .05
+var segments : Array[Area2D]
+
 
 func _unhandled_input(event):
 	if event.is_action_pressed("ui_left") and direction != Vector2.RIGHT:
@@ -46,18 +46,28 @@ func _unhandled_input(event):
 
 
 #Get place for snake to go along a certain sort of grid then set that goal to the previous snake body segment
-func _physics_process(delta):
-	# move towards target position
+
+
+func _get_position_from_grid(col : int, row : int) -> Vector2:
+	return Vector2(col * 10, row * 10)
+
+
+func move(data : Dictionary) -> Dictionary:
+	var delta = data.delta
 	move_time -= delta
 	position = position.move_toward(target_pos, SPEED * delta)
 	if position == target_pos:
 		#If we have reached the target
 		#Set next position to target position and the direction by the grid square size
-		segment_moved.emit(target_pos, direction, direction_pos)
 		next_pos = target_pos + next_direction * 40
 		target_pos = next_pos
 		curr_pos = _get_position_from_grid(target_pos.x/10, target_pos.y/10) - next_direction * 10
 		direction = next_direction
-
-func _get_position_from_grid(col : int, row : int) -> Vector2:
-	return Vector2(col * 10, row * 10)
+	var new_data = {
+		"delta" : delta,
+		"target_pos" : target_pos,
+		"direction" : direction,
+		"direction_pos" : direction_pos,
+		"next_pos" : next_pos
+	}
+	return new_data
