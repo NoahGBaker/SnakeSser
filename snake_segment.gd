@@ -28,11 +28,12 @@ func move(delta, data : Dictionary) -> Dictionary:
 	#Set next position to target position and the direction by the grid square size
 	if data: 
 		next_pos = data.next_pos
+		target_pos_alt = data.target_pos
 		direction_pos = data.direction_pos
 		next_direction = data.next_direction
 		next_pos = data.next_pos
 		#If we have reached the target
-		if position == direction_pos:
+		if curr_pos == direction_pos:
 			next_direction = direction
 		#Set next position to target position and the direction by the grid square size
 		print(target_pos_alt)
@@ -41,6 +42,7 @@ func move(delta, data : Dictionary) -> Dictionary:
 		curr_pos = _get_position_from_grid(target_pos_alt.x/10, target_pos_alt.y/10) - next_direction * 10
 		new_data = {
 		"delta" : delta,
+		"target_pos" : target_pos_alt,
 		"direction" : direction,
 		"next_direction" : next_direction,
 		"direction_pos" : direction_pos,

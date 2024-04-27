@@ -10,6 +10,7 @@ var segments : Array[Area2D]
 func _physics_process(delta):
 	var data_from_previous_segment = {
 		"delta" : delta,
+		"target_pos" : Vector2.ZERO,
 		"direction" : Vector2.ZERO,
 		"next_direction" : Vector2.ZERO,
 		"direction_pos" : Vector2.ZERO,

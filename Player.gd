@@ -63,7 +63,8 @@ func move(delta, data : Dictionary) -> Dictionary:
 		curr_pos = _get_position_from_grid(target_pos.x/10, target_pos.y/10) - next_direction * 10
 		new_data = {
 		"delta" : delta,
-		"direciton" : direction,
+		"target_pos" : target_pos,
+		"direction" : direction,
 		"next_direction" : next_direction,
 		"direction_pos" : direction_pos,
 		"next_pos" : next_pos
