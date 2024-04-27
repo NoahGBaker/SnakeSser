@@ -6,43 +6,45 @@ extends Area2D
 #Previous Segment
 #Direction Position (Target Position)
 #!!! Use Signals !!!
-
+var target_pos_alt = Vector2(100, 140)
 const SPEED = 290
-var direction
 var next_direction = Vector2.RIGHT
-var curr_pos
-var target_pos
-var next_pos
+var curr_pos = Vector2(100, 150)
 var direction_pos
+var direction
+var next_pos
 
 
 func _ready():
 	position = Vector2(100, 150)
 
-
 func _get_position_from_grid(col : int, row : int) -> Vector2:
 	return Vector2(col * 10, row * 10)
 
-func move(data : Dictionary) -> Dictionary:
-	var delta = data.delta
-	var target_pos = data.target_pos
-	var direction = data.direction
-	var direction_pos = data.direction_pos
-	var next_pos = data.next_pos
-	position = position.move_toward(target_pos, SPEED * delta)
-	if position == target_pos:
+var new_data = {}
+func move(delta, data : Dictionary) -> Dictionary:
+		
+	#If we have reached the target
+	#Set next position to target position and the direction by the grid square size
+	if data: 
+		next_pos = data.next_pos
+		direction_pos = data.direction_pos
+		next_direction = data.next_direction
+		next_pos = data.next_pos
 		#If we have reached the target
+		if position == direction_pos:
+			next_direction = direction
 		#Set next position to target position and the direction by the grid square size
-		next_pos = target_pos + next_direction * 40
-		target_pos = next_pos
-		curr_pos = _get_position_from_grid(target_pos.x/10, target_pos.y/10) - next_direction * 10
-		direction = next_direction
-	var new_data = {
+		print(target_pos_alt)
+		next_pos = target_pos_alt + next_direction * 40
+		target_pos_alt = next_pos
+		curr_pos = _get_position_from_grid(target_pos_alt.x/10, target_pos_alt.y/10) - next_direction * 10
+		new_data = {
 		"delta" : delta,
-		"target_pos" : target_pos,
 		"direction" : direction,
+		"next_direction" : next_direction,
 		"direction_pos" : direction_pos,
 		"next_pos" : next_pos
-	}
-	print(new_data)
+		}
+	position = position.move_toward(target_pos_alt, SPEED * delta)
 	return new_data

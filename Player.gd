@@ -16,7 +16,7 @@ const SPEED = 290.0
 
 @onready var segment = get_node("$../SnakeSegment")
 var direction_pos = Vector2(190, 150)
-var direction = Vector2.RIGHT
+var direction
 var next_direction = Vector2.RIGHT
 var curr_pos = Vector2(150, 150)
 var target_pos = Vector2(200, 150)
@@ -41,19 +41,18 @@ func _unhandled_input(event):
 			position = curr_pos
 	
 	direction_pos = curr_pos
+	direction = next_direction
 #Use direction_pos to get the position of where we turn and get the turn direction. 
 #Then use that to have a snake segment turn there
 
 
 #Get place for snake to go along a certain sort of grid then set that goal to the previous snake body segment
 
-
 func _get_position_from_grid(col : int, row : int) -> Vector2:
 	return Vector2(col * 10, row * 10)
 
-
-func move(data : Dictionary) -> Dictionary:
-	var delta = data.delta
+var new_data = {}
+func move(delta, data : Dictionary) -> Dictionary:
 	move_time -= delta
 	position = position.move_toward(target_pos, SPEED * delta)
 	if position == target_pos:
@@ -62,12 +61,11 @@ func move(data : Dictionary) -> Dictionary:
 		next_pos = target_pos + next_direction * 40
 		target_pos = next_pos
 		curr_pos = _get_position_from_grid(target_pos.x/10, target_pos.y/10) - next_direction * 10
-		direction = next_direction
-	var new_data = {
+		new_data = {
 		"delta" : delta,
-		"target_pos" : target_pos,
-		"direction" : direction,
+		"direciton" : direction,
+		"next_direction" : next_direction,
 		"direction_pos" : direction_pos,
 		"next_pos" : next_pos
-	}
+		}
 	return new_data
