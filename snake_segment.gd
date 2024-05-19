@@ -23,30 +23,32 @@ func _get_position_from_grid(col : int, row : int) -> Vector2:
 
 var new_data = {}
 func move(delta, data : Dictionary) -> Dictionary:
-		
 	#If we have reached the target
 	#Set next position to target position and the direction by the grid square size
-	if data: 
-		next_pos = data.next_pos
-		target_pos_alt = data.target_pos
-		direction_pos = data.direction_pos
-		next_direction = data.next_direction
-		next_pos = data.next_pos
-		#If we have reached the target
-		if curr_pos == direction_pos:
-			next_direction = direction
-		#Set next position to target position and the direction by the grid square size
-		print(target_pos_alt)
-		next_pos = target_pos_alt + next_direction * 40
-		target_pos_alt = next_pos
-		curr_pos = _get_position_from_grid(target_pos_alt.x/10, target_pos_alt.y/10) - next_direction * 10
-		new_data = {
-		"delta" : delta,
-		"target_pos" : target_pos_alt,
-		"direction" : direction,
-		"next_direction" : next_direction,
-		"direction_pos" : direction_pos,
-		"next_pos" : next_pos
-		}
+	if data:
+		if data.position_list[data.position_number+1] == data.position_number+1:
+			print("WORKED")
+			next_pos = data.next_pos
+			target_pos_alt = data.target_pos
+			direction_pos = data.direction_pos
+			next_direction = data.next_direction
+			next_pos = data.next_pos
+			#If we have reached the target
+			if curr_pos == direction_pos:
+				next_direction = direction
+			#Set next position to target position and the direction by the grid square size
+			print(target_pos_alt)
+			next_pos = target_pos_alt + next_direction * 40
+			target_pos_alt = next_pos
+			curr_pos = _get_position_from_grid(target_pos_alt.x/10, target_pos_alt.y/10) - next_direction * 10
+			new_data = {
+			"delta" : delta,
+			"target_pos" : target_pos_alt,
+			"direction" : direction,
+			"next_direction" : next_direction,
+			"direction_pos" : direction_pos,
+			"next_pos" : next_pos,
+			"position_number" : data.position_number + 1
+			}
 	position = position.move_toward(target_pos_alt, SPEED * delta)
 	return new_data

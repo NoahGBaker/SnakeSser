@@ -53,20 +53,23 @@ func _get_position_from_grid(col : int, row : int) -> Vector2:
 
 var new_data = {}
 func move(delta, data : Dictionary) -> Dictionary:
-	move_time -= delta
-	position = position.move_toward(target_pos, SPEED * delta)
-	if position == target_pos:
-		#If we have reached the target
-		#Set next position to target position and the direction by the grid square size
-		next_pos = target_pos + next_direction * 40
-		target_pos = next_pos
-		curr_pos = _get_position_from_grid(target_pos.x/10, target_pos.y/10) - next_direction * 10
-		new_data = {
-		"delta" : delta,
-		"target_pos" : target_pos,
-		"direction" : direction,
-		"next_direction" : next_direction,
-		"direction_pos" : direction_pos,
-		"next_pos" : next_pos
-		}
+	if data:
+		if data.position_number == 1:
+			move_time -= delta
+			position = position.move_toward(target_pos, SPEED * delta)
+			if position == target_pos:
+				#If we have reached the target
+				#Set next position to target position and the direction by the grid square size
+				next_pos = target_pos + next_direction * 40
+				target_pos = next_pos
+				curr_pos = _get_position_from_grid(target_pos.x/10, target_pos.y/10) - next_direction * 10
+				new_data = {
+				"delta" : delta,
+				"target_pos" : target_pos,
+				"direction" : direction,
+				"next_direction" : next_direction,
+				"direction_pos" : direction_pos,
+				"next_pos" : next_pos,
+				"position_number" : data.position_number
+				}
 	return new_data
